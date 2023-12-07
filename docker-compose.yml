@@ -1,0 +1,30 @@
+services:
+  server:
+    container_name: node_server
+    build: ./
+    command: npm run dev
+    ports:
+      - 4000:3000
+    volumes:
+      - ./:/server
+    depends_on:
+      - pgbd
+
+  pgbd:
+    container_name: 'postgres_pgdb'
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=root
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata: null
