@@ -6,7 +6,7 @@ services:
     ports:
       - 4000:3000
     volumes:
-      - ./:/server
+      - ./:/app
     depends_on:
       - pgbd
 
