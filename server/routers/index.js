@@ -1,5 +1,9 @@
-import test from './test';
+const { Router } = require('express')
 
-export default (app) => {
-    app.use('/', test)
-}
+const test = require('./test')
+
+const router = Router();
+
+router.use('/', test)
+
+module.exports =  router

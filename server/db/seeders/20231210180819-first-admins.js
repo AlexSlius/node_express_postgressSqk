@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add seed commands here.
      *
@@ -12,23 +12,20 @@ module.exports = {
      * }], {});
     */
 
-    await queryInterface.bulkInsert('roles', [
+    await queryInterface.bulkInsert('admins', [
       {
-        id: 1,
-        name: 'Admin',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 2,
-        name: 'Manager',
+        firstName: 'Alex',
+        lastName: 'Sliusarchuk',
+        email: 'admin@gmail.com',
+        password: 'test',
+        roleId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }
     ])
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add commands to revert seed here.
      *

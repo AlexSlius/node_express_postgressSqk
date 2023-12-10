@@ -1,7 +1,7 @@
-import express from 'express'
-import dotenv from 'dotenv'
+const express = require('express')
+const dotenv = require('dotenv')
 
-import routers from './routers'
+const routers = require('./routers')
 
 dotenv.config();
 
@@ -10,7 +10,6 @@ const app = express();
 //MIDDLEWARE
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/api', routers)
 
-routers(app)
-
-export default app;
+module.exports = app;

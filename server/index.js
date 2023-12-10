@@ -1,4 +1,4 @@
-import app from './app.js'
+const app = require('./app')
 
 const port = process.env.APP_PORT || 3000
 

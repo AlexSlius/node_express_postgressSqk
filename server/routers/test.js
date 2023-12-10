@@ -1,10 +1,10 @@
-import { Router } from 'express'
+const { Router } = require('express')
 
-import { getTest, getMain } from '../controllers/test'
+const { getTest, getMain } = require('../controllers/test')
 
-const routes = new Router()
+const routes = Router()
 
 routes.get('/', getMain)
 routes.get('/test', getTest)
 
-export default routes
+module.exports = routes

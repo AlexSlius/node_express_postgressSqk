@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "node, express, node, postgressSql and other",
   "main": "server/index.js",
+  "type": "commonjs",
   "scripts": {
-    "dev": "nodemon -L --exec babel-node server/index.js",
+    "dev": "nodemon -L server/index.js",
+    "devbabel": "nodemon -L --exec babel-node server/index.js",
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
