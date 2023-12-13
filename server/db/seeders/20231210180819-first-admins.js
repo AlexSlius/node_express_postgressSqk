@@ -1,3 +1,6 @@
+const hasPass = require('../../helpers/hasPassword')
+
+
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
@@ -17,7 +20,7 @@ module.exports = {
         firstName: 'Alex',
         lastName: 'Sliusarchuk',
         email: 'admin@gmail.com',
-        password: 'test',
+        password: hasPass.hasPasswordSalt('admin'),
         roleId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
