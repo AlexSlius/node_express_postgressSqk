@@ -2,25 +2,20 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('adminTokens', {
+    await queryInterface.createTable('postCategories', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      adminId: {
+      idPost: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        primaryKey: false,
+        allowNull: false
       },
-      token: {
-        type: Sequelize.STRING(600),
-        allowNull: false,
-      },
-      timeOfLife: {
-        type: Sequelize.DATE,
-        allowNull: false,
+      idCategory: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -32,8 +27,8 @@ module.exports = {
       }
     });
   },
-  
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('adminTokens');
+    await queryInterface.dropTable('postCategories');
   }
 };

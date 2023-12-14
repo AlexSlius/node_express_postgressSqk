@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const { admins, adminToken } = require('../db/models');
-const { where } = require('sequelize');
 
 module.exports = (req, res, next) => {
     if (req.method === 'OPTIONS')

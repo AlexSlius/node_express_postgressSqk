@@ -31,8 +31,6 @@ const login = (req, res) => {
     }).then((data) => {
         const { password, ...objData } = data.toJSON()
 
-        console.log('JSON.parse(objData): ', objData);
-
         hasPass.hasCompare(passwordAdmin, password).then(async (status) => {
             if (!!status) {
                 try {
@@ -77,7 +75,32 @@ const session = (req, res) => {
     res.status(200).json({ isAuth: true })
 }
 
+const logout = (req, res) => {
+    try {
+        adminToken.destroy({
+            where: {
+                token: req.token
+            }
+        }).then(() => {
+            res
+                .status(200)
+                .json({
+                    status: true,
+                    message: 'Logout'
+                })
+        })
+    } catch (error) {
+        res
+            .status(500)
+            .json({
+                error: true,
+                message: 'Server error'
+            })
+    }
+}
+
 module.exports = {
     login,
-    session
+    session,
+    logout
 }

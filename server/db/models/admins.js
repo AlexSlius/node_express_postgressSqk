@@ -2,6 +2,7 @@ const { Model } = require('sequelize')
 
 const roles = require('./roles')
 const tokenAdmins = require('./adminToken')
+const posts = require('./posts')
 
 module.exports = (sequelize, DataTypes) => {
   class Admins extends Model {
@@ -32,8 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'admins',
   });
 
-  Admins.belongsTo(roles(sequelize, DataTypes), { as: 'roles', foreignKey: 'roleId' }) 
+  Admins.belongsTo(roles(sequelize, DataTypes), { as: 'roles', foreignKey: 'roleId' })
   Admins.hasMany(tokenAdmins(sequelize, DataTypes), { as: 'tokenAdmins', foreignKey: 'adminId' })
+  Admins.hasMany(posts(sequelize, DataTypes), {as: 'posts', foreignKey: 'idAdmin'})
 
   return Admins;
 };
