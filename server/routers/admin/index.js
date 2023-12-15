@@ -6,7 +6,7 @@ const authMiddleware = require('../../middleware/authMiddleware')
 
 const router = Router();
 
-router.use('/', auth)
+router.use('/auth', auth)
 router.use('/categories', authMiddleware, categories)
 
 module.exports = router

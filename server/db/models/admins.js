@@ -35,7 +35,9 @@ module.exports = (sequelize, DataTypes) => {
 
   Admins.belongsTo(roles(sequelize, DataTypes), { as: 'roles', foreignKey: 'roleId' })
   Admins.hasMany(tokenAdmins(sequelize, DataTypes), { as: 'tokenAdmins', foreignKey: 'adminId' })
-  Admins.hasMany(posts(sequelize, DataTypes), {as: 'posts', foreignKey: 'idAdmin'})
+  
+  Admins.hasMany(posts(sequelize, DataTypes), { as: 'posts', foreignKey: 'idAdmin' })
+  posts(sequelize, DataTypes).belongsTo(Admins)
 
   return Admins;
 };

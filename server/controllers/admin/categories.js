@@ -1,65 +1,96 @@
 const { categories } = require('../../db/models')
 
-const getCategoriesAll = (req, res) => {
-    categories.findAll().then((data) => {
-        res.status(200).json({
-            data: data
-        })
-    })
-}
-
-const addCategories = (req, res) => {
-    const { name } = req.body;
-
-    if (!name)
-        res.
-            status(400)
-            .json({
-                error: true,
-                message: 'The name field is empty'
+class CategoryController {
+    async getCategoriesAll(req, res) {
+        categories.findAll().then((data) => {
+            res.status(200).json({
+                data: data
             })
+        })
+    }
 
-    try {
-        categories.create({
-            name
-        }).then((data) => {
+    async addCategories(req, res) {
+        const { name } = req.body;
+
+        if (!name)
             res.
-                status(200)
+                status(400)
                 .json({
-                    data,
-                    message: 'Сategory added'
+                    error: true,
+                    message: 'The name field is empty'
                 })
-        })
-            .catch(function (err) {
+
+        try {
+            categories.create({
+                name
+            }).then((data) => {
                 res.
-                    status(400)
+                    status(200)
                     .json({
-                        error: true,
-                        dataErrors: err.errors.map(el => ({ key: el.path, message: el.message })),
-                        message: err.errors[0].message
+                        data,
+                        message: 'Сategory added'
                     })
-            });
-    } catch (error) {
-        res.
-            status(500)
-            .json({
-                error: true,
-                message: 'error'
             })
+                .catch(function (err) {
+                    res.
+                        status(400)
+                        .json({
+                            error: true,
+                            dataErrors: err.errors.map(el => ({ key: el.path, message: el.message })),
+                            message: err.errors[0].message
+                        })
+                });
+        } catch (error) {
+            res.
+                status(500)
+                .json({
+                    error: true,
+                    message: 'error'
+                })
+        }
+    }
+
+    async pathCategory(req, res) {
+        try {
+            const { id } = req.params
+            const { name } = req.body
+
+            let categoryUpdate = await categories.update({
+                name
+            }, {
+                where: {
+                    id
+                }
+            })
+
+            res.status(200).json({
+                status: !!categoryUpdate[0],
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                error: e
+            })
+        }
+    }
+
+    async deleteCategory(req, res) {
+        try {
+            const { id } = req.params
+
+            let categoryDelete = await categories.destroy({
+                where: { id }
+            })
+
+            res.status(200).json({
+                status: categoryDelete
+            })
+        } catch (e) {
+            res.status(500).json({
+                error: e
+            })
+        }
     }
 }
 
-const pathCategory = (req, res) => {
-    res.status(200)
-}
-
-const deleteCategory = (req, res) => {
-    res.status(200)
-}
-
-module.exports = {
-    getCategoriesAll,
-    addCategories,
-    pathCategory,
-    deleteCategory
-}
+module.exports = new CategoryController()

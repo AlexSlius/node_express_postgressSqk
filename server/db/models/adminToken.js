@@ -1,7 +1,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class adminToken extends Model {
+  class AdminToken extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  adminToken.init({
+  AdminToken.init({
     adminId: {
       type: DataTypes.INTEGER,
       references: {
@@ -27,5 +27,5 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'adminToken',
   });
 
-  return adminToken;
+  return AdminToken;
 };

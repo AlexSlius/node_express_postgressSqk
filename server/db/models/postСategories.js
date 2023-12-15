@@ -1,7 +1,10 @@
 const { Model } = require('sequelize');
 
+const posts = require('./posts')
+const categories = require('./categories')
+
 module.exports = (sequelize, DataTypes) => {
-  class postCategories extends Model {
+  class PostCategories extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  postCategories.init({
+  PostCategories.init({
     idPost: {
       type: DataTypes.INTEGER,
       references: {
@@ -32,5 +35,18 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'postCategories',
   });
 
-  return postCategories;
+  posts(sequelize, DataTypes).belongsToMany(categories(sequelize, DataTypes), {
+    as: 'categories',
+    through: PostCategories,
+    sourceKey: 'id',
+    foreignKey: 'idPost'
+  })
+  categories(sequelize, DataTypes).belongsToMany(posts(sequelize, DataTypes), {
+    as: 'posts',
+    through: PostCategories,
+    sourceKey: 'id',
+    foreignKey: 'idCategory'
+  })
+
+  return PostCategories;
 };
