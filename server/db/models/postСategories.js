@@ -16,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   PostCategories.init({
-    idPost: {
+    postId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'posts',
         key: 'id'
       }
     },
-    idCategory: {
+    categoryId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'categories',
@@ -39,13 +39,13 @@ module.exports = (sequelize, DataTypes) => {
     as: 'categories',
     through: PostCategories,
     sourceKey: 'id',
-    foreignKey: 'idPost'
+    foreignKey: 'postId'
   })
   categories(sequelize, DataTypes).belongsToMany(posts(sequelize, DataTypes), {
     as: 'posts',
     through: PostCategories,
     sourceKey: 'id',
-    foreignKey: 'idCategory'
+    foreignKey: 'categoryId'
   })
 
   return PostCategories;

@@ -38,6 +38,7 @@ module.exports = (req, res, next) => {
                     let tokenLive = new Date(tokenAdminToken.timeOfLife).getTime() > new Date().getTime();
 
                     if (!!tokenLive) {
+                        req.idUser = userDataFromToken.id
                         next();
                     }
 
