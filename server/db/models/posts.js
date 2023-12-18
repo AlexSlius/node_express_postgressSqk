@@ -1,5 +1,7 @@
 const { Model } = require('sequelize');
 
+const categories = require('./categories')
+
 module.exports = (sequelize, DataTypes) => {
   class Posts extends Model {
     /**
@@ -16,7 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     text: DataTypes.TEXT,
-    picture: DataTypes.STRING,
+    picture: {
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('picture')
+        return rawValue ? `${process.env.DOMAIN}/${process.env.PATH_PUBLIC_IMAGE}/${rawValue}` : ''
+      },
+    },
     idAdmin: {
       type: DataTypes.INTEGER,
       references: {
@@ -28,6 +36,20 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'posts',
   });
+
+  Posts.belongsToMany(categories(sequelize, DataTypes), {
+    as: 'categories',
+    through: 'postCategories',
+    sourceKey: 'id',
+    foreignKey: 'postId'
+  })
+
+  categories(sequelize, DataTypes).belongsToMany(Posts, {
+    as: 'posts',
+    through: 'postCategories',
+    sourceKey: 'id',
+    foreignKey: 'categoryId'
+  })
 
   return Posts;
 };

@@ -1,7 +1,7 @@
-const path = require('path')
-const uuid = require('uuid')
 
-const { posts, postCategories } = require('../../db/models')
+const pictureUuidName = require('../../helpers/pictureUuidName')
+
+const { posts, postCategories, categories } = require('../../db/models')
 const validPost = require('../../validations/posts')
 
 class PostController {
@@ -17,16 +17,13 @@ class PostController {
 
             const { title, description, text, idCategory } = req.body
             const adminId = req.idUser
-            const categories = JSON.parse(idCategory);
+            const categoriesData = JSON.parse(idCategory);
 
-            if (!categories?.length)
+            if (!categoriesData?.length)
                 return next({ message: 'idCategory array category' })
 
-            const { picture } = req.files
-            const filePicture = picture?.name ? picture : picture[0]
-            const fileName = `${uuid.v4()}__${filePicture.name}`
-
-            picture.mv(path.resolve(__dirname, '../../..', 'public/picture', fileName))
+            const { picture = null } = req.files
+            const { fileName } = pictureUuidName({ picture })
 
             let newPost = await posts.create({
                 title,
@@ -36,7 +33,7 @@ class PostController {
                 picture: fileName
             })
 
-            categories.forEach(i => {
+            categoriesData.forEach(i => {
                 postCategories.create({
                     postId: newPost.id,
                     categoryId: i,
@@ -55,19 +52,99 @@ class PostController {
     }
 
     async edit(req, res) {
+        const { id = null } = req.params
 
+        if (id === null)
+            res.status(500).Json({
+                error: true,
+                message: 'Id not found'
+            })
+
+        const dataBody = req.body;
+        const adminId = req.idUser
+
+
+        let dataPost = {
+            ...dataBody,
+            idAdmin: adminId,
+        }
+
+        if (req.files?.picture) {
+            const { picture = null } = req.files
+            const { fileName } = pictureUuidName({ picture })
+
+            if (fileName) {
+                dataPost.picture = fileName
+            }
+        }
+
+        let postUpdate = await posts.update(dataPost, {
+            where: { id }
+        })
+
+        res.status(200).json({ data: !!postUpdate?.[0] })
     }
 
-    async getAll(req, res) {
+    async getAll(req, res, next) {
+        try {
+            const { offset = 0, limit = 10 } = req.query;
 
+            let data = await posts.findAndCountAll({
+                include: [
+                    {
+                        model: categories,
+                        as: 'categories',
+                        attributes: ['id', 'name'],
+                        through: {
+                            attributes: [],
+                        }
+                    }
+                ],
+                distinct: true,
+                offset: offset,
+                limit
+            })
+
+            res.status(200).json({
+                data: data
+            })
+        } catch (error) {
+            next(error.message)
+        }
     }
 
     async getOne(req, res) {
+        const { id = null } = req.params
 
+        const onePost = await posts.findOne({
+            where: {
+                id
+            },
+            include: [
+                {
+                    model: categories,
+                    as: 'categories',
+                    attributes: ['id', 'name'],
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        })
+
+        res.status(200).json({
+            data: onePost
+        })
     }
 
     async delete(req, res) {
+        const { id = null } = req.params
 
+        let statusDelete = await posts.destroy({
+            where: { id }
+        })
+
+        res.status(200).json({ status: statusDelete })
     }
 }
 

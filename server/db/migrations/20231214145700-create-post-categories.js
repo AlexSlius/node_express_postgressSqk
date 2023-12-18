@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      idPost: {
+      postId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      idCategory: {
+      categoryId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

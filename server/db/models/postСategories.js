@@ -35,18 +35,5 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'postCategories',
   });
 
-  posts(sequelize, DataTypes).belongsToMany(categories(sequelize, DataTypes), {
-    as: 'categories',
-    through: PostCategories,
-    sourceKey: 'id',
-    foreignKey: 'postId'
-  })
-  categories(sequelize, DataTypes).belongsToMany(posts(sequelize, DataTypes), {
-    as: 'posts',
-    through: PostCategories,
-    sourceKey: 'id',
-    foreignKey: 'categoryId'
-  })
-
   return PostCategories;
 };
