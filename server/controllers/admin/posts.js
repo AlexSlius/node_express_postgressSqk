@@ -1,8 +1,11 @@
+const { Op } = require('sequelize')
 
 const pictureUuidName = require('../../helpers/pictureUuidName')
 
 const { posts, postCategories, categories } = require('../../db/models')
 const validPost = require('../../validations/posts')
+const { defaultSorting } = require('../../helpers/sorting')
+const { isArray } = require('../../helpers/typeofs')
 
 class PostController {
     async create(req, res, next) {
@@ -87,7 +90,28 @@ class PostController {
 
     async getAll(req, res, next) {
         try {
-            const { offset = 0, limit = 10 } = req.query;
+            const {
+                offset = 0,
+                limit = 10,
+                sorting = 'DESC',
+                categorys = null
+            } = req.query
+
+            let categoryWhere = {}
+
+            if (categorys) {
+                if (isArray(categorys))
+                    categoryWhere = {
+                        ...categoryWhere,
+                        [Op.or]: categorys.map((item => ({ id: item })))
+                    }
+
+                if (!isArray(categorys))
+                    categoryWhere = {
+                        ...categoryWhere,
+                        [Op.or]: [{ id: categorys }]
+                    }
+            }
 
             let data = await posts.findAndCountAll({
                 include: [
@@ -97,9 +121,11 @@ class PostController {
                         attributes: ['id', 'name'],
                         through: {
                             attributes: [],
-                        }
+                        },
+                        where: categoryWhere,
                     }
                 ],
+                order: defaultSorting({ params: { sorting } }), // сортування
                 distinct: true,
                 offset: offset,
                 limit

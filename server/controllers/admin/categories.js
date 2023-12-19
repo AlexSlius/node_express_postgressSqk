@@ -1,8 +1,13 @@
 const { categories } = require('../../db/models')
+const { defaultSorting } = require('../../helpers/sorting')
 
 class CategoryController {
     async getCategoriesAll(req, res) {
-        categories.findAll().then((data) => {
+        const { sorting = 'DESC' } = req.query;
+
+        categories.findAll({
+            order: defaultSorting({ params: { sorting } })
+        }).then((data) => {
             res.status(200).json({
                 data: data
             })
