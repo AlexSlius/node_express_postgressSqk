@@ -1,6 +1,17 @@
+const { appeals } = require('../../db/models')
+
 class Appeal {
     async sendForm(req, res) {
-        res.status(200).json({ status: 'successfull' })
+        const { topicId, email, name, question } = req.body
+
+        const newAppeal = await appeals.create({
+            topicId, email, name, question
+        })
+
+        res.status(200).json({
+            status: 'successfull',
+            data: newAppeal
+        })
     }
 }
 

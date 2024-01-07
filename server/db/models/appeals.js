@@ -1,7 +1,9 @@
 const { Model } = require('sequelize');
 
+const topics = require('./topics')
+
 module.exports = (sequelize, DataTypes) => {
-  class appeal extends Model {
+  class appeals extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,18 +14,29 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  appeal.init({
+  appeals.init({
     topicId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'topics',
+        key: 'id',
+      }
     },
     email: DataTypes.STRING,
     name: DataTypes.STRING,
     question: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'appeal',
+    modelName: 'appeals',
   });
 
-  return appeal;
+  topics(sequelize, DataTypes).hasMany(appeals, {
+    as: 'appeals',
+    foreignKey: 'topicId'
+  });
+
+  appeals.belongsTo(topics(sequelize, DataTypes));
+
+  return appeals;
 };

@@ -1,7 +1,5 @@
 const { Model } = require('sequelize');
 
-const appeal = require('./appeal')
-
 module.exports = (sequelize, DataTypes) => {
   class topics extends Model {
     /**
@@ -20,9 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'topics',
   });
-
-  topics.hasMany(appeal(sequelize, DataTypes), { foreignKey: 'topicId' })
-  appeal(sequelize, DataTypes).belongsTo(topics)
 
   return topics;
 };

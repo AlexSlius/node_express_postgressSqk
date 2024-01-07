@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      topic: {
+      topicId: {
         type: Sequelize.INTEGER
       },
       email: {
