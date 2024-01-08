@@ -1,4 +1,5 @@
 const { appeals } = require('../../db/models')
+const sendEmail = require('../../utils/emails')
 
 class Appeal {
     async sendForm(req, res) {
@@ -7,6 +8,11 @@ class Appeal {
         const newAppeal = await appeals.create({
             topicId, email, name, question
         })
+
+        sendEmail({
+            to: email,
+            data: {name, question, email}
+        });
 
         res.status(200).json({
             status: 'successfull',
